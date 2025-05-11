@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+      "target": "ES6",
+      "module": "CommonJS",
+      "outDir": "./dist",
+      "rootDir": "./",
+      "strict": true,
+      "esModuleInterop": true,
+      "baseUrl": ".",                // Base directory for non-relative imports
+      "paths": {
+        "@src/*": ["src/*"]          // Alias @src maps to the ./src folder
+      },
+    }
+  }
+  
