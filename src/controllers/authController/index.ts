@@ -6,12 +6,12 @@ class AuthController {
     async login(req: Request, res: Response) {
         try {
             const response = await authService.loginService(req.body);
-            res.status(200).json(response);
+            res.status(200).json({success: true, ...response});
         } catch (error: any) {
             if (error.message === "User not found" || error.message === "Invalid password") {
-                res.status(401).json({ error: error.message });
+                res.status(401).json({ success: false, error: error.message });
             } else {
-                res.status(500).json({ error: "Internal server error" });
+                res.status(500).json({ success: false, error: "Internal server error" });
             }
         }
     }

@@ -1,4 +1,4 @@
-import { PostConstant } from "@src/constant";
+import { PostConstant } from "../../../constant";
 import prisma from "../../../config/prisma";
 
 const postQuery = {

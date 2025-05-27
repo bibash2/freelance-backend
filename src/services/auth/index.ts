@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import AuthConstant from "../../constant";
+import geoEncodingService from "../../services/geoEncoding/geoEncoding";
 dotenv.config();
 
 class AuthService {
@@ -12,7 +13,7 @@ class AuthService {
         return jwt.sign(
             { id: user.id, email: user.email },
             process.env.JWT_SECRET as string,
-            { expiresIn: '1h' }
+            { expiresIn: '7d' }
         );
     }
 
@@ -38,25 +39,30 @@ class AuthService {
 
     async registerService(payload: any) {
         try {
-            const {email, password, firstName, lastName} = payload;
+            const {email, password, name, location} = payload;
+            const {latitude, longitude} = await geoEncodingService.convertAddressToGeocode(location);
             const user = await prisma.user.findUnique({where: {email}});
             if(user) {
                 throw new Error(AuthConstant.USER_ALREADY_EXISTS);
             }
             const hashedPassword = await bcrypt.hash(password, 10);
-            const fullName = `${firstName} ${lastName}`;
+        
             const newUser = await prisma.user.create({
                 data: {
                     email,
                     password: hashedPassword,
-                    name: fullName
+                    name: name,
+                    userAddress: location,
+                    location: {
+                        latitude,
+                        longitude
+                    }
                 }
             });
             
             return { success: true, user: { id: newUser.id, email: newUser.email, name: newUser.name } };
         } catch (error) {
             throw error;
-            
         }
     }
 

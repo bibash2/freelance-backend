@@ -13,41 +13,112 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
+enum Urgency {
+  IMMEDIATE
+  MODERATE
+  LOW
+}
+
+enum workCallType {
+  BY_ME
+  TO_ME
+}
+enum userRole {
   USER
   SERVICE_PROVIDER
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  role      userRole @default("USER")
-  posts     Post[]
+  id                        String   @id @default(uuid())
+  name                      String
+  email                     String   @unique
+  password                  String
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+  role                      userRole @default(USER)
+  userAddress               String?
+  location                  Json?
+  serviceProviderLocation   Json?
+  serviceProviderAddress    String?
+  isServiceProvider         Boolean? @default(false)
+  isAcceptedServiceProvider Boolean? @default(false)
+  userContact               String?
+  serviceProviderContact    String?
+  bio                       String?
+  category                  String?
+
+
+  posts   Post[]
+  reviews Review[]
+  Bid     Bid[]
 }
 
 model Post {
-  id           String   @id @default(uuid())
-  title        String
-  content      String
-  description  String?
-  category     String?
-  image        String?
-  location     String?
-  price        Float?
-  isNegotiable Boolean  @default(false)
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id                        String   @id @default(uuid())
+  title                     String
+  description               String
+  category                  String
+  image                     String?
+  location                  Json?
+  price                     Float
+  isNegotiable              Boolean? @default(false)
+  isActive                  Boolean? @default(true)
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+  urgency                   Urgency?
+  acceptedServiceProviderId String?
+  address                   String?
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
+  bids   Bid[]
 }
 
 model Category {
-  id           String @id @default(uuid())
-  category     String
+  id       String @id @default(uuid())
+  category String
+}
+
+model Review {
+  id                String @id @default(uuid())
+  message           String
+  rating            Int
+  userId            String
+  user              User   @relation(fields: [userId], references: [id])
+  serviceProviderId String // ✅ required but no default
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model workCall {
+  id                String   @id @default(uuid())
+  chatHistory       Json
+  serviceProviderId String
+  userId            String
+  title             String
+  description       String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  budget            Float?
+  address           String?
+  location          Json?
+  type              workCallType?
+  dateTime          DateTime?
+}
+
+model Bid {
+  id                String   @id @default(uuid())
+  bidAmount         Float
+  bidMessage        String
+  serviceProviderId String
+  postId            String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  post            Post @relation(fields: [postId], references: [id])
+  serviceProvider User @relation(fields: [serviceProviderId], references: [id])
+
+  @@index([postId])
+  @@index([serviceProviderId])
 }
