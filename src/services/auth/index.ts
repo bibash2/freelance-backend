@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import AuthConstant from "../../constant";
 import geoEncodingService from "../../services/geoEncoding/geoEncoding";
+import { uploadImage } from "../../utils/Haversine";
 dotenv.config();
 
 class AuthService {
@@ -39,7 +40,8 @@ class AuthService {
 
     async registerService(payload: any) {
         try {
-            const {email, password, name, location} = payload;
+            const {email, password, name, location, phone:userContact, base64Image} = payload;
+            const returnPath = await uploadImage(base64Image, email)
             const {latitude, longitude} = await geoEncodingService.convertAddressToGeocode(location);
             const user = await prisma.user.findUnique({where: {email}});
             if(user) {
@@ -50,13 +52,15 @@ class AuthService {
             const newUser = await prisma.user.create({
                 data: {
                     email,
+                    userContact,
                     password: hashedPassword,
                     name: name,
                     userAddress: location,
                     location: {
                         latitude,
                         longitude
-                    }
+                    },
+                    image: returnPath   
                 }
             });
             

@@ -30,7 +30,8 @@ class UserController {
             const payload = {
                 userId,
                 address: address as string,
-                category: req.query.category as string
+                category: req.query.category as string,
+                acceptedServiceProviderId: null
             }
             console.log(payload)
             const response = await userService.getPostList(payload)

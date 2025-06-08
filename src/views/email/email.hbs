@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>New Service Request</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+  <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <h2 style="color: #333;">📢 New Service Request</h2>
+
+    <table style="width: 100%; border-collapse: collapse;">
+      <tr>
+        <td style="padding: 8px; font-weight: bold;">Title:</td>
+        <td style="padding: 8px;">{{message.title}}</td>
+      </tr>
+      <tr style="background-color: #f9f9f9;">
+        <td style="padding: 8px; font-weight: bold;">Description:</td>
+        <td style="padding: 8px;">{{message.description}}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px; font-weight: bold;">Category:</td>
+        <td style="padding: 8px;">{{message.category}}</td>
+      </tr>
+      <tr style="background-color: #f9f9f9;">
+        <td style="padding: 8px; font-weight: bold;">Urgency:</td>
+        <td style="padding: 8px;">{{message.urgency}}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px; font-weight: bold;">Price:</td>
+        <td style="padding: 8px;">Rs. {{message.price}}</td>
+      </tr>
+      <tr style="background-color: #f9f9f9;">
+        <td style="padding: 8px; font-weight: bold;">Phone:</td>
+        <td style="padding: 8px;">{{message.phone}}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px; font-weight: bold;">Address:</td>
+        <td style="padding: 8px;">{{message.address}}</td>
+      </tr>
+      <tr style="background-color: #f9f9f9;">
+        <td style="padding: 8px; font-weight: bold;">Location:</td>
+        <td style="padding: 8px;">
+          <a href="https://www.google.com/maps?q={{message.location.latitude}},{{message.location.longitude}}" 
+             target="_blank" 
+             style="color: #1a73e8; text-decoration: none;">
+            View on Google Maps
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding: 8px; font-weight: bold;">User ID:</td>
+        <td style="padding: 8px;">{{message.userId}}</td>
+      </tr>
+    </table>
+
+    <p style="margin-top: 30px; font-size: 14px; color: #777;">This message was sent via your service request system.</p>
+  </div>
+</body>
+</html>
